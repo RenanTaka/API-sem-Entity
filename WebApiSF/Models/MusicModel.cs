@@ -4,7 +4,7 @@ namespace WebApiSF.Models
     public class MusicModel
     {
         public int ID { get; set; }
-        [DisplayName("Nome da música")]
+        [DisplayName("Banda")]
         public string Banda { get; set; }
         public string Musica { get; set; }
 

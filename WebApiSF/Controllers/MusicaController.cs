@@ -61,51 +61,59 @@ namespace WebApiSF.Controllers
             {
                 conn.Open();
 
-                
                 string comando = "SELECT*FROM Bands WHERE ID=@ID";
                 SqlDataAdapter da = new SqlDataAdapter(comando, conn);
                 da.SelectCommand.Parameters.AddWithValue("@ID", id);
                 da.Fill(dt);
-
             }
-
-                return View();
+            if (dt.Rows.Count == 1) //se encontrar um ID
+            {
+                musicmodel.ID = Convert.ToInt32(dt.Rows[0][0].ToString());//CONVERTE DE INT PRA STRING DENOVO??
+                musicmodel.Banda = dt.Rows[0][1].ToString();
+                musicmodel.Musica = dt.Rows[0][2].ToString();
+                return View(musicmodel);
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+                
         }
 
         // POST: MusicaController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(MusicModel musicmodel)
         {
-            try
+            using (SqlConnection conn = new SqlConnection(cs))
             {
-                return RedirectToAction(nameof(Index));
+                conn.Open();
+                string comando = "UPDATE Bands SET Banda=@Banda, Musica=@Musica WHERE ID=@ID";
+                SqlCommand cmd = new SqlCommand(comando, conn);
+                cmd.Parameters.AddWithValue("ID", musicmodel.ID);
+                cmd.Parameters.AddWithValue("@Banda", musicmodel.Banda);
+                cmd.Parameters.AddWithValue("@Musica", musicmodel.Musica);
+                cmd.ExecuteNonQuery();
             }
-            catch
-            {
-                return View();
-            }
+
+            return RedirectToAction("Index");
+           
+            
         }
 
         // GET: MusicaController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            using (SqlConnection conn = new SqlConnection(cs))
+            {
+                conn.Open();
+                string comando = "DELETE FROM Bands WHERE ID=@ID";
+                SqlCommand cmd = new SqlCommand(comando, conn);
+                cmd.Parameters.AddWithValue("ID", id);
+                cmd.ExecuteNonQuery();
+            }
+            return RedirectToAction("Index");
         }
 
-        // POST: MusicaController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }
