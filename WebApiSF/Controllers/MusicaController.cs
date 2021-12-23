@@ -8,7 +8,7 @@ namespace WebApiSF.Controllers
 {
     public class MusicaController : Controller
     {
-        string cs = "DATA SOURCE=NOTE-RENANOGA; INITIAL CATALOG=FTI; Trusted_Connection=True";
+        string cs = "DATA SOURCE=RENAN-PC; INITIAL CATALOG=FTI; Trusted_Connection=True";
         [HttpGet]//suporta GET
 
         // GET: MusicaController
@@ -21,7 +21,7 @@ namespace WebApiSF.Controllers
                 SqlDataAdapter da = new SqlDataAdapter();
                 da.SelectCommand = new SqlCommand("SELECT*FROM Bands", conn);
                 da.Fill(dt); //PREENCHE OS VALORES NA DT
-                return View(dt);
+                return (View(dt));
             }                                                
             
             return View();
@@ -68,7 +68,7 @@ namespace WebApiSF.Controllers
             }
             if (dt.Rows.Count == 1) //se encontrar um ID
             {
-                musicmodel.ID = Convert.ToInt32(dt.Rows[0][0].ToString());//CONVERTE DE INT PRA STRING DENOVO??
+                musicmodel.ID = Convert.ToInt32(dt.Rows[0][0].ToString());
                 musicmodel.Banda = dt.Rows[0][1].ToString();
                 musicmodel.Musica = dt.Rows[0][2].ToString();
                 return View(musicmodel);
